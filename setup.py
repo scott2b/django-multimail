@@ -32,6 +32,6 @@ setup(
             ]
     },
     license = multimail.__license__,
-    long_description = open('README.txt').read(),
+    long_description = open('README.rst').read(),
     zip_safe = False,
 )
