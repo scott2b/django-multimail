@@ -1,0 +1,9 @@
+{% extends "multimail/base_multimail_email.html" %}
+{% load i18n %}
+{% block content %}
+<p>{% trans "Please verify your e-mail address." %}</p>
+
+<p>{% trans "A new e-mail address has been associated with your account at" %} {{ current_site_name }}. {% trans "Please click the link below to verify your new address." %}</p>
+
+<p><a href="{{ verify_link }}">{% trans "Click here to verify your e-mail." %}</a></p>
+{% endblock %}

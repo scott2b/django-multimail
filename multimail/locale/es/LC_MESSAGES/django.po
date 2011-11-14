@@ -1,0 +1,64 @@
+# Spanish message file for django-multimail
+# Copyright (C) 2011, Scott B. Bradley
+# This file is distributed under the same license as the django-multimail package.
+# Scott B. Bradley, 2011
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-07-21 16:24+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+#: __init__.py:12
+msgid "This e-mail address has already been verified."
+msgstr "Esta dirección de correo electrónico ha sido previamente verificada."
+
+#: __init__.py:13
+msgid "Thank you for verifying your e-mail address."
+msgstr "Gracias por verificar su dirreción de correo electrónico."
+
+#: __init__.py:15
+msgid ""
+"The account associated with this e-mail address has been deactivated. "
+"Please contact the site administrator."
+msgstr "La cuenta asociada con esta dirección de correo electrónico ha sido desactivada. Por favor contacte al administrador del sitio."
+
+#: __init__.py:16
+msgid ""
+"The seleted e-mail verification link is invalid. Please re-register your e-"
+"mail address."
+msgstr "La liga de verificación de correo electrónico seleccionada es inválida. Por favor vuelva a registrar su dirección de correo electrónico."
+
+#: __init__.py:19
+msgid "Verfication required"
+msgstr "Verificación requerida"
+
+#: templates/multimail/verification_email.html:3
+#: templates/multimail/verification_email.txt
+msgid "Please verify your e-mail address."
+msgstr "Por favor verifique su dirección de correo electrónico."
+
+#: templates/multimail/verification_email.html:5
+#: templates/multimail/verification_email.txt
+msgid "A new e-mail address has been associated with your account at"
+msgstr "Una nueva dirección de correo electrónico ha sido asociada a su cuenta en"
+
+#: templates/multimail/verification_email.html:5
+msgid "Please click the link below to verify your new address."
+msgstr "Por favor haga click sobre la liga que aparece abajo para verificar su nueva dirección."
+
+#: templates/multimail/verification_email.txt
+msgid "Please copy and paste the link below into your browser's address box to verify your new address."
+msgstr "Por favor copie y pegue la siguiente liga en el cuadro de direcciones de su navegador de internet para verificar su nueva dirección"
+
+msgid "A verification link has been sent to %(email)s"
+msgstr "Una liga de verificaci�n ha sido enviado a %(email)s"

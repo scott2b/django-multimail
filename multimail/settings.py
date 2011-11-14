@@ -1,0 +1,27 @@
+from django.conf import settings
+from django.utils.translation import ugettext_lazy as _
+
+class Settings(dict):
+    def __getattr__(self, index):
+        return getattr(settings, 'MULTIMAIL_%s'%index,
+            getattr(settings, 'MULTIMAIL_SETTINGS', {}).get(index,
+            super(Settings, self).get(index)))
+
+MM = Settings(
+    ALLOW_VERIFICATION_OF_INACTIVE_ACCOUNTS = False,
+    DELETE_PRIMARY = False,
+    VERIFICATION_LINK_SENT_MESSAGE = \
+        _("A verification link has been sent to %(email)s"),
+    EMAIL_ALREADY_VERIFIED_MESSAGE = \
+        _("This e-mail address has already been verified."),
+    EMAIL_VERIFIED_MESSAGE = _("Thank you for verifying your e-mail address."),
+    EMAIL_VERIFICATION_URL = 'http://%(current_site_domain)s/mail/verify/%(emailaddress_id)s/%(verif_key)s',
+    INACTIVE_ACCOUNT_MESSAGE = _("The account associated with this e-mail address has been deactivated. Please contact the site administrator."),
+    INVALID_VERIFICATION_LINK_MESSAGE = _("The seleted e-mail verification link is invalid. Please re-register your e-mail address."),
+    POST_VERIFY_URL = '/',
+    USE_MESSAGES = True,
+    VERIFICATION_EMAIL_SUBJECT = _('Verfication required'),
+    VERIFICATION_EMAIL_HTML_TEMPLATE = 'multimail/verification_email.html',
+    VERIFICATION_EMAIL_TEXT_TEMPLATE = 'multimail/verification_email.txt',
+    FROM_EMAIL_ADDRESS = getattr(settings, 'ADMIN_EMAIL', ''),
+)
