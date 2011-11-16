@@ -19,7 +19,7 @@ class Verify(View):
             if email.is_verified():
                 raise email.AlreadyVerified()
             if not MM.ALLOW_VERIFICATION_OF_INACTIVE_ACCOUNTS and \
-                    not.email.user.is_active:
+                    not email.user.is_active:
                 raise email.InactiveAccount()
             email.remote_addr = request.META.get('REMOTE_ADDR')
             email.remote_host = request.META.get('REMOTE_HOST')
