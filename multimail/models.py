@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site, get_current_site
 from django.core.exceptions import ImproperlyConfigured
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives, mail_admins
 from django.db import models
 from django.db.models.signals import post_save
 from django.template import Context
@@ -18,17 +18,20 @@ class EmailAddress(models.Model):
     e-mail address. The address that is on the user object itself as the
     email property is considered to be the primary address, for which there
     should also be an EmailAddress object associated with the user."""
-    class Meta:
-        unique_together = (('user', 'email'),)
+    #class Meta:
+    #    unique_together = (('user', 'email'),)
 
     user         = models.ForeignKey(User)
-    email        = models.EmailField(max_length=100,null=True)
+    email        = models.EmailField(max_length=100,null=True,unique=True)
     created_at   = models.DateTimeField(auto_now_add=True)
     verif_key    = models.CharField(max_length=40)
     verified_at  = models.DateTimeField(default=None,null=True,blank=True)
     remote_addr  = models.IPAddressField(null=True,blank=True)
     remote_host  = models.CharField(max_length=255,null=True,blank=True)
     is_primary   = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return self.email
 
     def is_verified(self):
         """Is this e-mail address verified? Verification is indicated by
@@ -132,8 +135,17 @@ def email_address_handler(sender, **kwargs):
     user = kwargs['instance']
     if not user.email:
         return
-    a,created = EmailAddress.objects.get_or_create(user=user,email=user.email)
-    a._set_primary_flags() # do this for every save in case things get out of sync
+    try:
+        a,created = EmailAddress.objects.get_or_create(user=user,email=user.email)
+        a._set_primary_flags() # do this for every save in case things get out of sync
+    except Exception:
+        msg = """An attempt to create EmailAddress object for user %s, email
+%s has failed. This may indicate that an EmailAddress object for that email
+already exists in the database. This situation can occur if, for example, a
+user is manually created through the admin panel or the shell with an email
+address that is the same as an existing EmailAddress objects.""" % (
+user.username, user.email)
+        mail_admins("Failed attempt to create Multimail email address.", msg)
 post_save.connect(email_address_handler, sender=User)
 
 def user_deactivation_handler(sender, **kwargs):
