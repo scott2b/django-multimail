@@ -24,4 +24,6 @@ MM = Settings(
     VERIFICATION_EMAIL_HTML_TEMPLATE = 'multimail/verification_email.html',
     VERIFICATION_EMAIL_TEXT_TEMPLATE = 'multimail/verification_email.txt',
     FROM_EMAIL_ADDRESS = getattr(settings, 'ADMIN_EMAIL', ''),
+    SEND_EMAIL_ON_USER_SAVE_SIGNAL = False,
+    USER_DEACTIVATION_HANDLER_ON = False,
 )
