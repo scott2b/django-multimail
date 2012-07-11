@@ -144,8 +144,8 @@ def email_address_handler(sender, **kwargs):
         else:
             try:
                 a = EmailAddress.objects.get(user=user,email=user.email)
-               """Provides that an address that has been just verified without use of django-multimail,
-               is still considered verified in conditions of django-multimail"""
+                # Provides that an address that has been just verified without use of django-multimail,
+                # is still considered verified in conditions of django-multimail
                 if user.is_active and not a.verified_at:
                     a.verified_at = datetime.datetime.now()
                     a.save(verify=False)
