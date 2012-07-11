@@ -137,8 +137,9 @@ def email_address_handler(sender, **kwargs):
     user = kwargs['instance']
     if not user.email:
         return
+    if kwargs.get('raw', False): # don't create email entry when loading fixtures etc.
+        return
     try:
-                
         if MM.SEND_EMAIL_ON_USER_SAVE_SIGNAL:
             a,created = EmailAddress.objects.get_or_create(user=user,email=user.email)        
         else:
