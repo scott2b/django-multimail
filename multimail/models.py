@@ -11,6 +11,7 @@ from django.db.models.signals import post_save
 from django.template import Context
 from django.template.loader import get_template
 from django.utils.hashcompat import sha_constructor
+from django.utils import timezone
 from multimail.settings import MM
 from multimail.util import build_context_dict
 from random import random
@@ -150,7 +151,7 @@ def email_address_handler(sender, **kwargs):
                 # Provides that an address that has been just verified without use of django-multimail,
                 # is still considered verified in conditions of django-multimail
                 if user.is_active and not a.verified_at:
-                    a.verified_at = datetime.datetime.now()
+                    a.verified_at = timezone.now()
                     a.save(verify=False)
             except EmailAddress.DoesNotExist:
                 a = EmailAddress()
