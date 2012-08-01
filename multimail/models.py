@@ -3,6 +3,7 @@ import datetime
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site, get_current_site
+from django.contrib import messages
 from django.core.exceptions import ImproperlyConfigured
 from django.core.mail import EmailMultiAlternatives, mail_admins
 from django.db import models
@@ -115,7 +116,8 @@ class EmailAddress(models.Model):
             messages.success(request, message,
                 fail_silently=not MM.USE_MESSAGES)
         else:
-            self.user.message_set.create(message=message)
+            if MM.USE_MESSAGES:
+                messages.add_message(request, messages.INFO, message)
 
     class InactiveAccount(Exception):
         """Raised when an account is required to be active.
