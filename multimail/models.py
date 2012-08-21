@@ -112,13 +112,13 @@ class EmailAddress(models.Model):
             [self.email])
         msg.attach_alternative(html_template.render(context), 'text/html')
         msg.send(fail_silently=False)
-        message = MM.VERIFICATION_LINK_SENT_MESSAGE % d
-        if request is not None:
-            messages.success(request, message,
-                fail_silently=not MM.USE_MESSAGES)
-        else:
-            if MM.USE_MESSAGES:
-                messages.add_message(request, messages.INFO, message)
+        if MM.USE_MESSAGES:
+            message = MM.VERIFICATION_LINK_SENT_MESSAGE % d
+            if request is not None:
+                messages.success(request, message,
+                    fail_silently=not MM.USE_MESSAGES)
+            else:
+                self.user.message_set.create(message=message)
 
     class InactiveAccount(Exception):
         """Raised when an account is required to be active.
