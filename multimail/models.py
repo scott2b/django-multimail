@@ -106,7 +106,10 @@ class EmailAddress(models.Model):
                 # something to use as a placeholder.
                 site = Site(domain='www.example.com', name='Example', pk=0)
         d = build_context_dict(site, self)
-        context = Context(d)
+        if request:
+            context = RequestContext(request, d)
+        else:
+            context = Context(d)
         msg = EmailMultiAlternatives(MM.VERIFICATION_EMAIL_SUBJECT % d,
             text_template.render(context),MM.FROM_EMAIL_ADDRESS,
             [self.email])
