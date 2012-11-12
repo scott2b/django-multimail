@@ -9,6 +9,7 @@ from django.core.mail import EmailMultiAlternatives, mail_admins
 from django.db import models
 from django.db.models.signals import post_save
 from django.template import Context
+from django.template import RequestContext
 from django.template.loader import get_template
 from django.utils.hashcompat import sha_constructor
 from django.utils import timezone
