@@ -4,8 +4,15 @@ from mock import Mock, patch
 from django.core.mail import EmailMultiAlternatives
 from django.contrib.auth.models import User
 from django.test.client import RequestFactory
-from django.utils import timezone
-import datetime, django, multimail, unittest
+import django, multimail, unittest
+
+try:
+    from django.utils import timezone
+    now = lambda: timezone.now()
+except ImportError:
+    import datetime
+    now = lambda: datetime.datetime.now()
+
 
 class EmailAddressTest(unittest.TestCase):
 
@@ -21,7 +28,7 @@ class EmailAddressTest(unittest.TestCase):
     def test_is_verified(self):
         addr = EmailAddress()
         self.assertFalse(addr.is_verified())
-        addr.verified_at = timezone.now()
+        addr.verified_at = now()
         self.assertTrue(addr.is_verified())
 
     @patch.object(multimail.models.EmailAddress, 'send_verification')
@@ -73,7 +80,7 @@ class VerifyTest(unittest.TestCase):
 
     @patch.object(django.contrib.messages, 'error')
     def test_verify__already_verified(self, mock_error):
-        self.addr.verified_at = timezone.now()
+        self.addr.verified_at = now()
         self.addr.save()
         response = Verify.as_view()(self.request, self.addr.pk,
             self.addr.verif_key)
