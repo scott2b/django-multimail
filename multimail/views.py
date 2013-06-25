@@ -3,11 +3,16 @@ from django.contrib.sites.models import Site
 from django.dispatch import Signal
 from django.shortcuts import redirect, get_object_or_404
 from django.views.generic.base import View
-from django.utils import timezone
 from models import EmailAddress
 from multimail.settings import MM
 from multimail.util import build_context_dict
-import datetime
+
+try:
+    from django.utils import timezone
+    now = lambda: timezone.now()
+except ImportError:
+    import datetime
+    now = lambda: datetime.datetime.now()
 
 email_verified = Signal(providing_args=[])
 
@@ -24,7 +29,7 @@ class Verify(View):
                 raise email.InactiveAccount()
             email.remote_addr = request.META.get('REMOTE_ADDR')
             email.remote_host = request.META.get('REMOTE_HOST')
-            email.verified_at = timezone.now()
+            email.verified_at = now()
             email.save()
             email_verified.send_robust(sender=email)
             site = Site.objects.get_current()
