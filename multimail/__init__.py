@@ -2,7 +2,7 @@
 
 .. moduleauthor:: Scott B. Bradley <scott@scott2b.com>
 """
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 __license__ = 'The MIT License (MIT)'
 
 __author__ = 'scott2b <Scott B. Bradley>'
