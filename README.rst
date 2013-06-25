@@ -12,6 +12,14 @@ functionality for Django's existing User model. Features include:
  * Auto-deletion of unverified email addresses when a user is administratively
    deactivated.
 
+DJANGO COMPATIBILITY NOTE
+
+Multimail was originally designed for Django 1.3 to use Django's messaging
+framework. Deprecation of the user.message_set in Django 1.4+ requires
+that multimail's USE_MESSAGES setting be set to False in order to work
+with those versions of Django. Consideration is being made for updated
+compatibility with the messaging framework for Django 1.4+.
+
 QUICKSTART 
 
 If you already have email sending configured, Sites configured, and are
