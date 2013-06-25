@@ -1,13 +1,18 @@
+import datetime
+
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site, get_current_site
+from django.contrib import messages
 from django.core.exceptions import ImproperlyConfigured
 from django.core.mail import EmailMultiAlternatives, mail_admins
 from django.db import models
 from django.db.models.signals import post_save
 from django.template import Context
+from django.template import RequestContext
 from django.template.loader import get_template
 from django.utils.hashcompat import sha_constructor
+from django.utils import timezone
 from multimail.settings import MM
 from multimail.util import build_context_dict
 from random import random
@@ -102,18 +107,22 @@ class EmailAddress(models.Model):
                 # something to use as a placeholder.
                 site = Site(domain='www.example.com', name='Example', pk=0)
         d = build_context_dict(site, self)
-        context = Context(d)
+        if request:
+            context = RequestContext(request, d)
+        else:
+            context = Context(d)
         msg = EmailMultiAlternatives(MM.VERIFICATION_EMAIL_SUBJECT % d,
             text_template.render(context),MM.FROM_EMAIL_ADDRESS,
             [self.email])
         msg.attach_alternative(html_template.render(context), 'text/html')
         msg.send(fail_silently=False)
-        message = MM.VERIFICATION_LINK_SENT_MESSAGE % d
-        if request is not None:
-            messages.success(request, message,
-                fail_silently=not MM.USE_MESSAGES)
-        else:
-            self.user.message_set.create(message=message)
+        if MM.USE_MESSAGES:
+            message = MM.VERIFICATION_LINK_SENT_MESSAGE % d
+            if request is not None:
+                messages.success(request, message,
+                    fail_silently=not MM.USE_MESSAGES)
+            else:
+                self.user.message_set.create(message=message)
 
     class InactiveAccount(Exception):
         """Raised when an account is required to be active.
@@ -135,8 +144,24 @@ def email_address_handler(sender, **kwargs):
     user = kwargs['instance']
     if not user.email:
         return
+    if kwargs.get('raw', False): # don't create email entry when loading fixtures etc.
+        return
     try:
-        a,created = EmailAddress.objects.get_or_create(user=user,email=user.email)
+        if MM.SEND_EMAIL_ON_USER_SAVE_SIGNAL:
+            a,created = EmailAddress.objects.get_or_create(user=user,email=user.email)        
+        else:
+            try:
+                a = EmailAddress.objects.get(user=user,email=user.email)
+                # Provides that an address that has been just verified without use of django-multimail,
+                # is still considered verified in conditions of django-multimail
+                if user.is_active and not a.verified_at:
+                    a.verified_at = timezone.now()
+                    a.save(verify=False)
+            except EmailAddress.DoesNotExist:
+                a = EmailAddress()
+                a.user = user
+                a.email = user.email
+            a.save( verify=False )            
         a._set_primary_flags() # do this for every save in case things get out of sync
     except Exception:
         msg = """An attempt to create EmailAddress object for user %s, email
@@ -149,6 +174,8 @@ user.username, user.email)
 post_save.connect(email_address_handler, sender=User)
 
 def user_deactivation_handler(sender, **kwargs):
+    if not MM.USER_DEACTIVATION_HANDLER_ON:
+        return
     """Ensures that an administratively deactivated user does not have any
     lingering unverified email addresses."""
     created = kwargs['created']
