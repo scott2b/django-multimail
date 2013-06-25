@@ -23,6 +23,7 @@ setup(
           'Topic :: Software Development :: Libraries :: Python Modules',
           ],
     #data_files = [
+    include_package_data = True,
     package_data = {
         'multimail/templates/multimail':
             [ TDIR + 'base_multimail_email.html',
