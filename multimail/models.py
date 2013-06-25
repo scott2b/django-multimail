@@ -12,11 +12,16 @@ from django.template import Context
 from django.template import RequestContext
 from django.template.loader import get_template
 from django.utils.hashcompat import sha_constructor
-from django.utils import timezone
 from multimail.settings import MM
 from multimail.util import build_context_dict
 from random import random
 
+try:
+    from django.utils import timezone
+    now = lambda: timezone.now()
+except ImportError:
+    import datetime
+    now = lambda: datetime.datetime.now()
 
 class EmailAddress(models.Model):
     """An e-mail address for a Django User. Users may have more than one
@@ -155,7 +160,7 @@ def email_address_handler(sender, **kwargs):
                 # Provides that an address that has been just verified without use of django-multimail,
                 # is still considered verified in conditions of django-multimail
                 if user.is_active and not a.verified_at:
-                    a.verified_at = timezone.now()
+                    a.verified_at = now()
                     a.save(verify=False)
             except EmailAddress.DoesNotExist:
                 a = EmailAddress()
