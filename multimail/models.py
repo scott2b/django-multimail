@@ -170,7 +170,9 @@ already exists in the database. This situation can occur if, for example, a
 user is manually created through the admin panel or the shell with an email
 address that is the same as an existing EmailAddress objects.""" % (
 user.username, user.email)
-        mail_admins("Failed attempt to create Multimail email address.", msg)
+        subj = "Failed attempt to create Multimail email address."
+        if MM.EMAIL_ADMINS:
+            mail_admins(subj, msg)
 post_save.connect(email_address_handler, sender=User)
 
 def user_deactivation_handler(sender, **kwargs):

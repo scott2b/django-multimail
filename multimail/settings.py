@@ -26,4 +26,5 @@ MM = Settings(
     FROM_EMAIL_ADDRESS = getattr(settings, 'ADMIN_EMAIL', ''),
     SEND_EMAIL_ON_USER_SAVE_SIGNAL = False,
     USER_DEACTIVATION_HANDLER_ON = False,
+    EMAIL_ADMINS = True,
 )
