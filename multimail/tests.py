@@ -1,8 +1,10 @@
 from multimail.models import EmailAddress
 from multimail.views import Verify
+from multimail.settings import MM
 from mock import Mock, patch
 from django.core.mail import EmailMultiAlternatives
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
 from django.test.client import RequestFactory
 import django, multimail, unittest
 
@@ -19,7 +21,7 @@ class EmailAddressTest(unittest.TestCase):
     def setUp(self):
         u = User(username='testuser')
         u.save()
-        self.obj_ut = EmailAddress(user=u)
+        self.obj_ut = EmailAddress(user=u, email='testemail')
         self.obj_ut.save()
 
     def tearDown(self):
@@ -34,10 +36,10 @@ class EmailAddressTest(unittest.TestCase):
     @patch.object(multimail.models.EmailAddress, 'send_verification')
     def test_save(self, mock_send_verification):
         addr = self.obj_ut
-        self.assertEquals(30, len(addr.verif_key))
+        self.assertEquals(40, len(addr.verif_key))
         addr.save()
         self.assertTrue(mock_send_verification.not_called)
-        addr2 = EmailAddress(user=addr.user)
+        addr2 = EmailAddress(user=addr.user, email='testemail2')
         addr2.save()
         self.assertTrue(mock_send_verification.called)
 
@@ -52,8 +54,10 @@ class VerifyTest(unittest.TestCase):
         self.factory = RequestFactory()
         self.request = self.factory.get('/verify')
         u = User(username='testuser')
+        u.set_password('testpassword')
         u.save()
-        self.addr = EmailAddress(user=u)
+        u = authenticate(username='testuser', password='testpassword')
+        self.addr = EmailAddress(user=u, email='testemail')
         self.addr.save()
 
     def tearDown(self):

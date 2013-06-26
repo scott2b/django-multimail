@@ -71,6 +71,8 @@ class EmailAddress(models.Model):
 
     def save(self, verify=True, request=None, *args, **kwargs):
         """Save this EmailAddress object."""
+        if self.email is None:
+            return
         if not self.verif_key:
             salt = sha_constructor(str(random())).hexdigest()[:5]
             self.verif_key = sha_constructor(salt + self.email).hexdigest()
@@ -149,16 +151,19 @@ def email_address_handler(sender, **kwargs):
     user = kwargs['instance']
     if not user.email:
         return
-    if kwargs.get('raw', False): # don't create email entry when loading fixtures etc.
+    if kwargs.get('raw', False): # don't create email entry when
+                                 # loading fixtures etc.
         return
     try:
         if MM.SEND_EMAIL_ON_USER_SAVE_SIGNAL:
-            a,created = EmailAddress.objects.get_or_create(user=user,email=user.email)        
+            a,created = EmailAddress.objects.get_or_create(user=user,
+                email=user.email)        
         else:
             try:
                 a = EmailAddress.objects.get(user=user,email=user.email)
-                # Provides that an address that has been just verified without use of django-multimail,
-                # is still considered verified in conditions of django-multimail
+                # Provides that an address that has been just verified
+                # without use of django-multimail, is still considered
+                # verified in conditions of django-multimail
                 if user.is_active and not a.verified_at:
                     a.verified_at = now()
                     a.save(verify=False)
@@ -167,7 +172,8 @@ def email_address_handler(sender, **kwargs):
                 a.user = user
                 a.email = user.email
             a.save( verify=False )            
-        a._set_primary_flags() # do this for every save in case things get out of sync
+        a._set_primary_flags() # do this for every save in case things
+                               # get out of sync
     except Exception:
         msg = """An attempt to create EmailAddress object for user %s, email
 %s has failed. This may indicate that an EmailAddress object for that email
