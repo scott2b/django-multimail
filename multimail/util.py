@@ -32,13 +32,13 @@ def get_site(request=None):
             getattr(MM, 'SITE_NAME') is not None:
         site = Site(domain=MM.SITE_DOMAIN, name=MM.SITE_NAME, pk=0)
     else:
-        if request is not None:
-            site = get_current_site(request)
-        else:
-            try:
+        try:
+            if request is not None:
+                site = get_current_site(request)
+            else:
                 site = Site.objects.get_current()
-            except (ImproperlyConfigured, Site.DoesNotExist):
-                domain = 'example.com'
-                name = 'Example'
-                site = Site(domain=domain, name=name, pk=0)
+        except (ImproperlyConfigured, Site.DoesNotExist):
+            domain = 'example.com'
+            name = 'Example'
+            site = Site(domain=domain, name=name, pk=0)
     return site
