@@ -1,7 +1,7 @@
 import datetime
 
+from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth.models import User
 from django.contrib.sites.models import Site, get_current_site
 from django.contrib import messages
 from django.core.exceptions import ImproperlyConfigured
@@ -17,6 +17,12 @@ from multimail.util import build_context_dict
 from random import random
 
 try:
+    USER_MODEL = settings.AUTH_USER_MODEL
+except AttributeError:
+    from django.contrib.auth.models import User
+    USER_MODEL = User
+
+try:
     from django.utils import timezone
     now = lambda: timezone.now()
 except ImportError:
@@ -28,10 +34,8 @@ class EmailAddress(models.Model):
     e-mail address. The address that is on the user object itself as the
     email property is considered to be the primary address, for which there
     should also be an EmailAddress object associated with the user."""
-    #class Meta:
-    #    unique_together = (('user', 'email'),)
 
-    user         = models.ForeignKey(User)
+    user         = models.ForeignKey(USER_MODEL)
     email        = models.EmailField(max_length=100,null=True,unique=True)
     created_at   = models.DateTimeField(auto_now_add=True)
     verif_key    = models.CharField(max_length=40)
@@ -184,7 +188,7 @@ user.username, user.email)
         subj = "Failed attempt to create Multimail email address."
         if MM.EMAIL_ADMINS:
             mail_admins(subj, msg)
-post_save.connect(email_address_handler, sender=User)
+post_save.connect(email_address_handler, sender=USER_MODEL)
 
 def user_deactivation_handler(sender, **kwargs):
     if not MM.USER_DEACTIVATION_HANDLER_ON:
@@ -197,4 +201,4 @@ def user_deactivation_handler(sender, **kwargs):
         for email in user.emailaddress_set.all():
             if not email.is_verified():
                 email.delete()
-post_save.connect(user_deactivation_handler, sender=User)
+post_save.connect(user_deactivation_handler, sender=USER_MODEL)
