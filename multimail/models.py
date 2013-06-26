@@ -3,7 +3,6 @@ import datetime
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.sites.models import Site, get_current_site
-from django.contrib import messages
 from django.core.exceptions import ImproperlyConfigured
 from django.core.mail import EmailMultiAlternatives, mail_admins
 from django.db import models
@@ -133,7 +132,13 @@ class EmailAddress(models.Model):
                 messages.success(request, message,
                     fail_silently=not MM.USE_MESSAGES)
             else:
-                self.user.message_set.create(message=message)
+                try:
+                    self.user.message_set.create(message=message)
+                except AttributeError:
+                    pass # user.message_set is deprecated and has been
+                         # fully removed as of Django 1.4. Thus, display
+                         # of this message without passing in a view is
+                         # supported only in 1.3
 
     class InactiveAccount(Exception):
         """Raised when an account is required to be active.
