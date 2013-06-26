@@ -1,9 +1,5 @@
-import datetime
-
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.sites.models import Site, get_current_site
-from django.core.exceptions import ImproperlyConfigured
 from django.core.mail import EmailMultiAlternatives, mail_admins
 from django.db import models
 from django.db.models.signals import post_save
@@ -107,15 +103,8 @@ class EmailAddress(models.Model):
         """
         html_template = get_template(MM.VERIFICATION_EMAIL_HTML_TEMPLATE)
         text_template = get_template(MM.VERIFICATION_EMAIL_TEXT_TEMPLATE)
-        if request:
-            site = get_current_site(request)
-        else:
-            try:
-                site = Site.objects.get_current()
-            except (ImproperlyConfigured, Site.DoesNotExist):
-                # This is not a real Site object in the database, just
-                # something to use as a placeholder.
-                site = Site(domain='www.example.com', name='Example', pk=0)
+        from multimail.util import get_site
+        site = get_site(request)
         d = build_context_dict(site, self)
         if request:
             context = RequestContext(request, d)
@@ -195,9 +184,8 @@ user.username, user.email)
             mail_admins(subj, msg)
 post_save.connect(email_address_handler, sender=USER_MODEL)
 
+
 def user_deactivation_handler(sender, **kwargs):
-    if not MM.USER_DEACTIVATION_HANDLER_ON:
-        return
     """Ensures that an administratively deactivated user does not have any
     lingering unverified email addresses."""
     created = kwargs['created']
@@ -206,4 +194,6 @@ def user_deactivation_handler(sender, **kwargs):
         for email in user.emailaddress_set.all():
             if not email.is_verified():
                 email.delete()
-post_save.connect(user_deactivation_handler, sender=USER_MODEL)
+
+if MM.USER_DEACTIVATION_HANDLER_ON:
+    post_save.connect(user_deactivation_handler, sender=USER_MODEL)

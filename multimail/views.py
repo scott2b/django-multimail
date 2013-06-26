@@ -1,11 +1,10 @@
 from django.contrib import messages
-from django.contrib.sites.models import Site
 from django.dispatch import Signal
 from django.shortcuts import redirect, get_object_or_404
 from django.views.generic.base import View
 from models import EmailAddress
 from multimail.settings import MM
-from multimail.util import build_context_dict
+from multimail.util import build_context_dict, get_site
 
 try:
     from django.utils import timezone
@@ -32,7 +31,7 @@ class Verify(View):
             email.verified_at = now()
             email.save()
             email_verified.send_robust(sender=email)
-            site = Site.objects.get_current()
+            site = get_site()
             d = build_context_dict(site, email)
             messages.success(request, MM.EMAIL_VERIFIED_MESSAGE % d,
                 fail_silently=not MM.USE_MESSAGES)

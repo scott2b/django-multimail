@@ -1,11 +1,15 @@
 from multimail.models import EmailAddress
 from multimail.views import Verify
 from multimail.settings import MM
+from multimail.util import get_site
 from mock import Mock, patch
 from django.core.mail import EmailMultiAlternatives
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
+from django.contrib.sites.models import Site
 from django.test.client import RequestFactory
+from django.test import TestCase
 import django, multimail, unittest
 
 try:
@@ -16,7 +20,7 @@ except ImportError:
     now = lambda: datetime.datetime.now()
 
 
-class EmailAddressTest(unittest.TestCase):
+class EmailAddressTest(TestCase):
 
     def setUp(self):
         u = User(username='testuser')
@@ -49,7 +53,41 @@ class EmailAddressTest(unittest.TestCase):
         addr.send_verification()
         self.assertTrue(mock_send.called)
 
-class VerifyTest(unittest.TestCase):
+    @patch.object(EmailMultiAlternatives, 'send')
+    @patch.object(django.contrib.sites.models, 'Site')
+    def test_unconfigured_site(self, mock_site,
+            mock_send):
+        addr = self.obj_ut
+        addr.send_verification()
+        mock_send.assert_called_with(fail_silently=False)
+        assert not mock_site.called
+
+    def test_get_site__MM_configs(self):
+        MM.SITE_DOMAIN = 'testdomain'
+        MM.SITE_NAME = 'TestName'
+        site = get_site()
+        self.assertEqual(site.domain, 'testdomain')        
+        MM.SITE_DOMAIN = None
+        MM.SITE_NAME = None
+        
+    def test_get_site__fallback(self):
+        Site.objects.all().delete()
+        Site.objects.clear_cache()
+        site = get_site()
+        self.assertEqual(site.domain, 'example.com')        
+
+    def test_get_site__configured(self):
+        Site.objects.all().delete()
+        Site(domain='testdomain', name='TestName', id=1).save()
+        settings.SITE_ID = 1
+        Site.objects.clear_cache()
+        site = get_site()
+        self.assertEqual(site.domain, 'testdomain')        
+
+
+
+
+class VerifyTest(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
         self.request = self.factory.get('/verify')
