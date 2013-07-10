@@ -24,7 +24,7 @@ QUICKSTART
 If you already have email sending configured and Sites configured. (See
 detailed setup for alternatives to configuring Sites)
  
- * python setup.py install
+ * pip install django-multimail
  * add multimail to installed apps
  * include 'django.template.loaders.eggs.Loader' in your TEMPLATE_LOADERS
  * In your base urls.py:
@@ -61,10 +61,13 @@ DETAILED START
    that load templates you create yourself so that you can create overriding
    templates to replace the builtin multimail templates.
 
- * To install multimail, run python setup.py install. You can pip install
-   directly from github with:
+ * To install: pip install django-multimail
 
-    pip install git+git@github.com:scott2b/django-multimail.git#egg=multimail
+   Or, to install from source:
+
+   pip install git+git@github.com:scott2b/django-multimail.git#egg=multimail
+
+   or, download the code and run python setup.py install
 
  * Add multimail to your installed apps in your settings file
 
