@@ -28,16 +28,16 @@ class EmailAddress(models.Model):
     """An e-mail address for a Django User. Users may have more than one
     e-mail address. The address that is on the user object itself as the
     email property is considered to be the primary address, for which there
-    should also be an EmailAddress object associated with the user."""
-
-    user         = models.ForeignKey(USER_MODEL)
-    email        = models.EmailField(max_length=100,null=True,unique=True)
-    created_at   = models.DateTimeField(auto_now_add=True)
-    verif_key    = models.CharField(max_length=40)
-    verified_at  = models.DateTimeField(default=None,null=True,blank=True)
-    remote_addr  = models.IPAddressField(null=True,blank=True)
-    remote_host  = models.CharField(max_length=255,null=True,blank=True)
-    is_primary   = models.BooleanField(default=False)
+    should also be an EmailAddress object associated with the user.
+    """
+    user = models.ForeignKey(USER_MODEL)
+    email = models.EmailField(max_length=100, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    verif_key = models.CharField(max_length=40)
+    verified_at = models.DateTimeField(default=None, null=True, blank=True)
+    remote_addr = models.IPAddressField(null=True, blank=True)
+    remote_host = models.CharField(max_length=255, null=True, blank=True)
+    is_primary = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.email
@@ -70,8 +70,6 @@ class EmailAddress(models.Model):
 
     def save(self, verify=True, request=None, *args, **kwargs):
         """Save this EmailAddress object."""
-        if self.email is None:
-            return
         if not self.verif_key:
             salt = sha_constructor(str(random())).hexdigest()[:5]
             self.verif_key = sha_constructor(salt + self.email).hexdigest()
@@ -154,24 +152,30 @@ def email_address_handler(sender, **kwargs):
         return
     try:
         if MM.SEND_EMAIL_ON_USER_SAVE_SIGNAL:
-            a,created = EmailAddress.objects.get_or_create(user=user,
-                email=user.email)        
+            if user.email:
+                addr = EmailAddress.objects.filter(user=user,
+                    email__iexact=user.email)
+                if addr:
+                    addr = addr[0]
+                else:
+                    addr = EmailAddress(user=user, email=user.email) 
+                    addr.save()
         else:
             try:
-                a = EmailAddress.objects.get(user=user,email=user.email)
+                addr = EmailAddress.objects.get(user=user,email=user.email)
                 # Provides that an address that has been just verified
                 # without use of django-multimail, is still considered
                 # verified in conditions of django-multimail
                 if user.is_active and not a.verified_at:
-                    a.verified_at = now()
-                    a.save(verify=False)
+                    addr.verified_at = now()
+                    addr.save(verify=False)
             except EmailAddress.DoesNotExist:
-                a = EmailAddress()
-                a.user = user
-                a.email = user.email
-            a.save( verify=False )            
-        a._set_primary_flags() # do this for every save in case things
-                               # get out of sync
+                addr = EmailAddress()
+                addr.user = user
+                addr.email = user.email
+            addr.save( verify=False )            
+        addr._set_primary_flags() # do this for every save in case things
+                                  # get out of sync
     except Exception:
         msg = """An attempt to create EmailAddress object for user %s, email
 %s has failed. This may indicate that an EmailAddress object for that email

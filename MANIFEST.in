@@ -1,2 +1,2 @@
 include LICENSE
-recursive-include multimail/templates/multimail/*
+recursive-include multimail *.html *.txt
