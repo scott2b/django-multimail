@@ -10,4 +10,6 @@ urlpatterns = patterns('',
     url(r'^send-verification-link/(\d+)/$', SendLink.as_view(), {}, name='send-verification-link'),
     url(r'^set-as-primary/(\d+)/$', 'multimail.views.set_as_primary',
         name='set_as_primary'),
+    url(r'^delete-email/(\d+)/$', 'multimail.views.delete_email',
+        name='delete_email'),
 )

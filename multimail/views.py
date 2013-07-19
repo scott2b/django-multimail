@@ -75,3 +75,26 @@ def set_as_primary(request, email_pk):
         return redirect(request.META['HTTP_REFERER'])
     except KeyError:
         return redirect(reverse(MM.SET_AS_PRIMARY_REDIRECT))
+
+
+def delete_email(request, email_pk):
+    """Delete the given email. Must be owned by current user."""
+    email = get_object_or_404(EmailAddress, pk=int(email_pk))
+    if email.user == request.user:
+        if not email.is_verified():
+            email.delete()
+        else:
+            num_verified_emails = len(request.user.emailaddress_set.filter(
+                verified_at__isnull=False))
+            if num_verified_emails > 1:
+                email.delete()
+            elif num_verified_emails == 1:
+                if MM.ALLOW_REMOVE_LAST_VERIFIED_EMAIL:
+                    email.delete()
+                else:
+                    messages.error(request,
+                        MM.REMOVE_LAST_VERIFIED_EMAIL_ATTEMPT_MSG,
+                            extra_tags='alert-error')
+    else:
+        messages.error(request, 'Invalid request')
+    return redirect(MM.DELETE_EMAIL_REDIRECT)

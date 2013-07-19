@@ -213,9 +213,19 @@ MULTIMAIL_SITE_NAME
     MULTIMAIL_SITE_DOMAIN to be set to non-None values.
 
 MULTIMAIL_SET_AS_PRIMARY_REDIRECT
-    Reverse name to redirect to after a call to the built-in set-as-primary
-    view. Defaults to 'profile'. Currently does not handle passing of
-    parameters -- if your user profiles require parameters (such as the
-    username or user pk) then you will need to implement your own view
-    for handling a set-as-primary request. See multimail.views.set_as_primary
-    in the source code.
+    Default: 'profile'. Reverse name to redirect to after a call to the
+    built-in set-as-primary view. Defaults to 'profile'. Currently does not
+    handle passing of parameters -- if your user profiles require parameters
+    (such as the username or user pk) then you will need to implement your own
+    view for handling a set-as-primary request. For details, see
+    multimail.views.set_as_primary in the source code.
+
+MULTIMAIL_ALLOW_REMOVE_LAST_VERIFIED_EMAIL
+    Default: False. Whether to allow the user to delete all verified
+    emails.
+
+MULTIMAIL_REMOVE_LAST_VERIFIED_EMAIL_ATTEMPT_MSG
+    Default: "Cannot remove last verified email. Add another verified email
+    address to remove the existing one." Message sent when user tries
+    to delete the last verified email. Only if
+    MULTIMAIL_ALLOW_REMOVE_LAST_VERIFIED_EMAIL is False.
