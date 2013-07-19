@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.core.urlresolvers import reverse
 from django.dispatch import Signal
 from django.shortcuts import redirect, get_object_or_404
 from django.views.generic.base import View
@@ -62,3 +63,15 @@ class SendLink(View):
             return redirect(next)
         else:
             return redirect(request.META['HTTP_REFERER'])
+
+
+def set_as_primary(request, email_pk):
+    """Set the requested email address as the primary. Can only be
+    requested by the owner of the email address."""
+    email = get_object_or_404(EmailAddress, pk=email_pk)
+    if email.user == request.user:
+        email.set_primary() 
+    try:
+        return redirect(request.META['HTTP_REFERER'])
+    except KeyError:
+        return redirect(reverse(MM.SET_AS_PRIMARY_REDIRECT))

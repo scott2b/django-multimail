@@ -211,3 +211,11 @@ MULTIMAIL_SITE_NAME
     Default: None. Set to override the site name for use in multimail
     templates and template strings. Requires both this and
     MULTIMAIL_SITE_DOMAIN to be set to non-None values.
+
+MULTIMAIL_SET_AS_PRIMARY_REDIRECT
+    Reverse name to redirect to after a call to the built-in set-as-primary
+    view. Defaults to 'profile'. Currently does not handle passing of
+    parameters -- if your user profiles require parameters (such as the
+    username or user pk) then you will need to implement your own view
+    for handling a set-as-primary request. See multimail.views.set_as_primary
+    in the source code.

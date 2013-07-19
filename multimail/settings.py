@@ -29,4 +29,5 @@ MM = Settings(
     EMAIL_ADMINS = True,
     SITE_DOMAIN = None,
     SITE_NAME = None,
+    SET_AS_PRIMARY_REDIRECT = 'profile',
 )

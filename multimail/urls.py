@@ -1,3 +1,4 @@
+from django.conf.urls import url
 try:
     from django.conf.urls import patterns
 except ImportError:
@@ -5,6 +6,8 @@ except ImportError:
 from multimail.views import Verify, SendLink
 
 urlpatterns = patterns('',
-    (r'^verify/(\d+)/(.+)/$', Verify.as_view(), {}, 'email-verification-url'),
-    (r'^send-verification-link/(\d+)/$', SendLink.as_view(), {}, 'send-verification-link'),
+    url(r'^verify/(\d+)/(.+)/$', Verify.as_view(), {}, name='email-verification-url'),
+    url(r'^send-verification-link/(\d+)/$', SendLink.as_view(), {}, name='send-verification-link'),
+    url(r'^set-as-primary/(\d+)/$', 'multimail.views.set_as_primary',
+        name='set_as_primary'),
 )
