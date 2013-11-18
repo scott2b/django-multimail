@@ -166,7 +166,7 @@ def email_address_handler(sender, **kwargs):
                 # Provides that an address that has been just verified
                 # without use of django-multimail, is still considered
                 # verified in conditions of django-multimail
-                if user.is_active and not a.verified_at:
+                if user.is_active and not addr.verified_at:
                     addr.verified_at = now()
                     addr.save(verify=False)
             except EmailAddress.DoesNotExist:
