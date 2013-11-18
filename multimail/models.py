@@ -168,12 +168,11 @@ def email_address_handler(sender, **kwargs):
                 # verified in conditions of django-multimail
                 if user.is_active and not addr.verified_at:
                     addr.verified_at = now()
-                    addr.save(verify=False)
             except EmailAddress.DoesNotExist:
                 addr = EmailAddress()
                 addr.user = user
                 addr.email = user.email
-            addr.save( verify=False )            
+            addr.save(verify=False)
         addr._set_primary_flags() # do this for every save in case things
                                   # get out of sync
     except Exception:
