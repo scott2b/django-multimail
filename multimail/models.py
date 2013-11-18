@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib import messages
 from django.core.mail import EmailMultiAlternatives, mail_admins
 from django.db import models
@@ -12,8 +11,9 @@ from multimail.util import build_context_dict
 from random import random
 
 try:
-    USER_MODEL = settings.AUTH_USER_MODEL
-except AttributeError:
+    from django.contrib.auth import get_user_model
+    USER_MODEL = get_user_model()
+except ImportError:
     from django.contrib.auth.models import User
     USER_MODEL = User
 
