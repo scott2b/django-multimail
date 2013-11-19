@@ -83,7 +83,6 @@ class EmailAddress(models.Model):
 
     def delete(self):
         """Delete this EmailAddress object."""
-        primary = self.is_primary
         user = self.user
         super(EmailAddress, self).delete()
         addrs = user.emailaddress_set.all()
