@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib import messages
 from django.core.mail import EmailMultiAlternatives, mail_admins
 from django.db import models
@@ -12,8 +11,9 @@ from multimail.util import build_context_dict
 from random import random
 
 try:
-    USER_MODEL = settings.AUTH_USER_MODEL
-except AttributeError:
+    from django.contrib.auth import get_user_model
+    USER_MODEL = get_user_model()
+except ImportError:
     from django.contrib.auth.models import User
     USER_MODEL = User
 
@@ -166,14 +166,13 @@ def email_address_handler(sender, **kwargs):
                 # Provides that an address that has been just verified
                 # without use of django-multimail, is still considered
                 # verified in conditions of django-multimail
-                if user.is_active and not a.verified_at:
+                if user.is_active and not addr.verified_at:
                     addr.verified_at = now()
-                    addr.save(verify=False)
             except EmailAddress.DoesNotExist:
                 addr = EmailAddress()
                 addr.user = user
                 addr.email = user.email
-            addr.save( verify=False )            
+            addr.save(verify=False)
         addr._set_primary_flags() # do this for every save in case things
                                   # get out of sync
     except Exception:

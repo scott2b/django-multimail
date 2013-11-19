@@ -70,7 +70,11 @@ def set_as_primary(request, email_pk):
     requested by the owner of the email address."""
     email = get_object_or_404(EmailAddress, pk=email_pk)
     if email.user == request.user:
-        email.set_primary() 
+        email.set_primary()
+        messages.success('%s is now marked as your primary email address.' % \
+                         email)
+    else:
+        messages.error('Invalid request.')
     try:
         return redirect(request.META['HTTP_REFERER'])
     except KeyError:
@@ -96,5 +100,5 @@ def delete_email(request, email_pk):
                         MM.REMOVE_LAST_VERIFIED_EMAIL_ATTEMPT_MSG,
                             extra_tags='alert-error')
     else:
-        messages.error(request, 'Invalid request')
+        messages.error(request, 'Invalid request.')
     return redirect(MM.DELETE_EMAIL_REDIRECT)
