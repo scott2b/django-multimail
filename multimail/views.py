@@ -71,10 +71,12 @@ def set_as_primary(request, email_pk):
     email = get_object_or_404(EmailAddress, pk=email_pk)
     if email.user == request.user:
         email.set_primary()
-        messages.success('%s is now marked as your primary email address.' % \
-                         email)
+        messages.success(
+            request,
+            '%s is now marked as your primary email address.' % email
+        )
     else:
-        messages.error('Invalid request.')
+        messages.error(request, 'Invalid request.')
     try:
         return redirect(request.META['HTTP_REFERER'])
     except KeyError:
