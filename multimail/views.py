@@ -70,7 +70,7 @@ def set_as_primary(request, email_pk):
     requested by the owner of the email address."""
     email = get_object_or_404(EmailAddress, pk=email_pk)
     if email.is_verified():
-        messages.error(request, 'Email %s needs to be verified first.')
+        messages.error(request, 'Email %s needs to be verified first.' % email)
     if email.user != request.user:
         messages.error(request, 'Invalid request.')
     else:
