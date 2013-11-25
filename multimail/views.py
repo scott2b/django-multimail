@@ -69,12 +69,16 @@ def set_as_primary(request, email_pk):
     """Set the requested email address as the primary. Can only be
     requested by the owner of the email address."""
     email = get_object_or_404(EmailAddress, pk=email_pk)
-    if email.user == request.user:
-        email.set_primary()
-        messages.success('%s is now marked as your primary email address.' % \
-                         email)
+    if not email.is_verified():
+        messages.error(request, 'Email %s needs to be verified first.' % email)
+    if email.user != request.user:
+        messages.error(request, 'Invalid request.')
     else:
-        messages.error('Invalid request.')
+        email.set_primary()
+        messages.success(
+            request, '%s is now marked as your primary email address.' % email
+        )
+
     try:
         return redirect(request.META['HTTP_REFERER'])
     except KeyError:
