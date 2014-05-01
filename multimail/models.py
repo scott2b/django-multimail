@@ -5,7 +5,10 @@ from django.db.models.signals import post_save
 from django.template import Context
 from django.template import RequestContext
 from django.template.loader import get_template
-from django.utils.hashcompat import sha_constructor
+try:
+  from django.utils.hashcompat import sha_constructor as sha1
+except ImportError:
+  from hashlib import sha1
 from multimail.settings import MM
 from multimail.util import build_context_dict
 from random import random
@@ -71,8 +74,8 @@ class EmailAddress(models.Model):
     def save(self, verify=True, request=None, *args, **kwargs):
         """Save this EmailAddress object."""
         if not self.verif_key:
-            salt = sha_constructor(str(random())).hexdigest()[:5]
-            self.verif_key = sha_constructor(salt + self.email).hexdigest()
+            salt = sha1(str(random())).hexdigest()[:5]
+            self.verif_key = sha1(salt + self.email).hexdigest()
         if verify and not self.pk:
             verify = True
         else:
