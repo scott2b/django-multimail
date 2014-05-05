@@ -5,10 +5,7 @@ from django.db.models.signals import post_save
 from django.template import Context
 from django.template import RequestContext
 from django.template.loader import get_template
-try:
-  from django.utils.hashcompat import sha_constructor as sha1
-except ImportError:
-  from hashlib import sha1
+from hashlib import sha1
 from multimail.settings import MM
 from multimail.util import build_context_dict
 from random import random
@@ -137,7 +134,7 @@ class EmailAddress(models.Model):
         pass
 
     class AlreadyVerified(Exception):
-        """Raised when a verfication request is made for an e-mail address
+        """Raised when a verification request is made for an e-mail address
         that is already verified."""
         pass
 
