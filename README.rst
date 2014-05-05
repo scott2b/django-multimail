@@ -145,7 +145,7 @@ MULTIMAIL_USE_MESSAGES
     messages framework.
 
 MULTIMAIL_VERIFICATION_EMAIL_SUBJECT **(See note below)
-    Default:  _('Verfication required')
+    Default:  _('Verification required')
 
 MULTIMAIL_VERIFICATION_EMAIL_HTML_TEMPLATE
     Default: 'multimail/verification_email.html'

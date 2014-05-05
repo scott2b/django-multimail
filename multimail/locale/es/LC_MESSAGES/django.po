@@ -39,7 +39,7 @@ msgid ""
 msgstr "La liga de verificaci贸n de correo electr贸nico seleccionada es inv谩lida. Por favor vuelva a registrar su direcci贸n de correo electr贸nico."
 
 #: __init__.py:19
-msgid "Verfication required"
+msgid "Verification required"
 msgstr "Verificaci贸n requerida"
 
 #: templates/multimail/verification_email.html:3
@@ -61,4 +61,4 @@ msgid "Please copy and paste the link below into your browser's address box to v
 msgstr "Por favor copie y pegue la siguiente liga en el cuadro de direcciones de su navegador de internet para verificar su nueva direcci贸n"
 
 msgid "A verification link has been sent to %(email)s"
-msgstr "Una liga de verificaci胣 ha sido enviado a %(email)s"
+msgstr "Una liga de verificaci贸n ha sido enviado a %(email)s"
