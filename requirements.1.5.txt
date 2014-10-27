@@ -1,3 +1,0 @@
-Django==1.5.11
--e git+git@github.com:scott2b/django-multimail.git#egg=multimail
-mock==1.0.1
