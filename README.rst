@@ -19,6 +19,15 @@ DJANGO COMPATIBILITY NOTE
 django-multimail is tested against Django versions 1.4, 1.5, 1.6, and 1.7.
 Please report any known issues with any of these Django versions.
 
+CHANGELOG
+=========
+
+0.1.3
+-----
+
+Breaks Django 1.3 Compatability. django-multimail is now compatible with
+Django 1.4+.
+
 TESTING
 =======
 
