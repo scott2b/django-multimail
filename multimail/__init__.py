@@ -1,8 +1,8 @@
 """django-multimail
 
-.. moduleauthor:: Scott B. Bradley <scott@scott2b.com>
+.. moduleauthor:: Scott B. Bradley <scott@scott2b.com>, Twitter <@scott2b>
 """
-__version__ = '0.1.2'
+__version__ = '0.1.3'
 __license__ = 'OSI Approved :: MIT License'
 
 __author__ = 'scott2b <Scott B. Bradley>'
