@@ -1,0 +1,30 @@
+
+      {% if form.non_field_errors %}
+          {% for error in form.non_field_errors %}
+            <div class="text-danger">
+              {{ error }}
+            </div>
+          {% endfor %}
+      {% endif %}
+      {% csrf_token %}
+      {% for field in form.hidden_fields %}
+         {{ field }}
+      {% endfor %}
+      {% for field in form.visible_fields %}
+         <div class="form-group">
+           {% if field.errors %}
+             <div class="text-danger">
+               {% for error in field.errors %}
+                 <p>{{ error }}</p>
+               {% endfor %}
+               {{ field.label_tag }}
+               {{ field }} <br/>
+               {{ field.help_text }}
+             </div>
+           {% else %}
+             {{ field.label_tag }}
+             {{ field }} <br/>
+             {{ field.help_text }}
+           {% endif %}
+         </div>
+      {% endfor %}

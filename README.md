@@ -1,4 +1,5 @@
-Requires Django 1.3+.
+Django Multimail Requires Django 1.4+
+=====================================
 
 The django-multimail demo site is at: http://www.django-multimail.com
 
@@ -13,13 +14,20 @@ functionality for Django's existing User model. Features include:
    deactivated.
 
 DJANGO COMPATIBILITY NOTE
+=========================
 
-django-multimail is tested against Django versions 1.3, 1.4, and 1.5. Please
-report any known issues with any of these Django versions. Note that testing
-with custom user models (Django 1.5) has not yet been done, but support for
-custom user models is anticipated.
+django-multimail is tested against Django versions 1.4, 1.5, 1.6, and 1.7.
+Please report any known issues with any of these Django versions.
+
+TESTING
+=======
+
+To run the test suite:
+
+    $ demo/manage.py test
 
 QUICKSTART 
+==========
 
 If you already have email sending configured and Sites configured. (See
 detailed setup for alternatives to configuring Sites)
@@ -32,17 +40,18 @@ detailed setup for alternatives to configuring Sites)
  * syncdb
 
 DETAILED START
+==============
 
  * Configure your project for sending email. This usually involves setting
    the following properties in your settings file: EMAIL_HOST, EMAIL_HOST_USER,
    EMAIL_HOST_PASSWORD, EMAIL_USE_TLS, EMAIL_BACKEND.  (See the Django docs:
-   https://docs.djangoproject.com/en/1.5/topics/email/).  Additionally, you
+   https://docs.djangoproject.com/en/1.7/topics/email/).  Additionally, you
    will need to set either MULTIMAIL_FROM_EMAIL_ADDRESS or ADMIN_EMAIL for
    Multimail to use as the from mail address. ADMIN_EMAIL is used if
    MULTIMAIL_FROM_EMAIL_ADDRESS has not been set.
 
  * Be sure you are setup to use Django's sites framework (see the Django
-   docs: https://docs.djangoproject.com/en/1.5/ref/contrib/sites/).
+   docs: https://docs.djangoproject.com/en/1.7/ref/contrib/sites/).
 
    multimail uses the current domain to build verification link URLs.
    Alternatively, you can set the MULTIMAIL_EMAIL_VERIFICATION_URL settings
@@ -54,7 +63,7 @@ DETAILED START
  * Use of the messages framework is now optional. To use messages, set
    MULTIMAL_USE_MESSAGES to True. Be sure you are exposing messages in your
    templates. See Django docs on the messages framework:
-   https://docs.djangoproject.com/en/1.5/ref/contrib/messages/
+   https://docs.djangoproject.com/en/1.7/ref/contrib/messages/
 
  * Be sure to include 'django.template.loaders.eggs.Loader' in the
    TEMPLATE_LOADERS in your settings file. You should put this after loaders
@@ -83,6 +92,7 @@ Verification email will be sent automatically when a new EmailAddress object is
 created.
 
 EXAMPLE
+=======
 
 >>> from django.contrib.auth.models import User
 >>> u = User.objects.all()[0]
@@ -93,12 +103,13 @@ You can also create EmailAddress objects for users directly:
 >>> addr = EmailAddress.objects.create(email='user@example.com', user=u)
 
 SETTINGS
+========
 
 The following properties may be set to customize your multimail installation.
 Note that where default properties are enclosed with _() indicates translation
 via Django's ugettext. Multimail does not currently have any built-in
 translations for its default messages. See the Django docs for information
-about creating translation messages: https://docs.djangoproject.com/en/1.5/topics/i18n/translation/#how-to-create-language-files
+about creating translation messages: https://docs.djangoproject.com/en/1.7/topics/i18n/translation/#how-to-create-language-files
 
 MULTIMAIL_ALLOW_VERIFICATION_OF_INACTIVE_ACCOUNTS
     Default: False. Whether to allow users to verify emails associated

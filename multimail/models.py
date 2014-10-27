@@ -1,3 +1,6 @@
+import hashlib
+from random import random
+from django.conf import settings
 from django.contrib import messages
 from django.core.mail import EmailMultiAlternatives, mail_admins
 from django.db import models
@@ -5,15 +8,11 @@ from django.db.models.signals import post_save
 from django.template import Context
 from django.template import RequestContext
 from django.template.loader import get_template
-from django.utils.hashcompat import sha_constructor
 from multimail.settings import MM
 from multimail.util import build_context_dict
-from random import random
-
 try:
-    from django.contrib.auth import get_user_model
-    USER_MODEL = get_user_model()
-except ImportError:
+    USER_MODEL = settings.AUTH_USER_MODEL
+except AttributeError: # handle Django 1.4
     from django.contrib.auth.models import User
     USER_MODEL = User
 
@@ -71,8 +70,8 @@ class EmailAddress(models.Model):
     def save(self, verify=True, request=None, *args, **kwargs):
         """Save this EmailAddress object."""
         if not self.verif_key:
-            salt = sha_constructor(str(random())).hexdigest()[:5]
-            self.verif_key = sha_constructor(salt + self.email).hexdigest()
+            salt = hashlib.sha1(str(random())).hexdigest()[:5]
+            self.verif_key = hashlib.sha1(salt + self.email).hexdigest()
         if verify and not self.pk:
             verify = True
         else:

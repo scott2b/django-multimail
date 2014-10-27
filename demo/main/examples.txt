@@ -1,0 +1,39 @@
+### Edit a user ###
+
+### The form ###
+class EditUserForm(UserChangeForm):
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'first_name', 'last_name')
+
+### In the view ###
+...
+    edit_user_form = EditUserForm(request.POST, instance=request.user)
+    if edit_user_form.is_valid():
+        edit_user_form.save() # No other action required. Multimail gets a
+                              # signal from the save action and creates an
+                              # EmailAddress instance with a verification link
+...
+
+### Create an EmailAddress instance ###
+
+### The form ###
+class AddEmailForm(forms.ModelForm):
+
+    class Meta:
+        model = EmailAddress
+        fields = ('email', 'user')
+    user = forms.ModelChoiceField(queryset=User.objects.all(),
+        widget=forms.HiddenInput)
+
+### In the view ###
+...
+# for GET requests:
+    add_email_form = AddEmailForm(instance=EmailAddress(
+        user=request.user))
+...
+# for POST:
+    add_email_form = AddEmailForm(request.POST)
+        if add_email_form.is_valid():
+            add_email_form.save()
+...

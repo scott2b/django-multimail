@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="jumbotron">
+  <h1>Multimail Demo</h1>
+  <p>Multimail is a Django plugin that manages the creation of multiple verified e-mail accounts for your users.</p>
+  {% if user.is_authenticated %}
+    <p>You are currently logged in as <b>{{ user.username }}</b>. Go to your <a class="btn btn-primary btn-lg" href="/profile/" %}">Profile page</a> or <a href="/logout/" class="btn btn-primary btn-lg">Logout</a></p>
+  {% endif %}
+</div>
+
+{% if not user.is_authenticated %}
+<div class="row">
+  <div class="col-md-6">
+  <h3>Create a new user to see multimail in action.</h3>
+  <form action="." method="POST" name="new-user-form" role="form">
+    {% with new_user_form as form %}
+      {% include "form.html" %}
+    {% endwith %}
+    <input type="hidden" name="form-name" value="new-user-form"/>
+    <input type="submit" method="submit" class="btn btn-primary btn-lg" value="Create User" />
+  </form>
+  </div>
+
+  <div class="col-md-6">
+  <h3>Or login with an existing account</h3>
+  <form action="." method="POST" name="auth-form" role="form">
+    {% with auth_form as form %}
+      {% include "form.html" %}
+    {% endwith %}
+    <input type="hidden" name="form-name" value="auth-form"/>
+    <input type="submit" method="submit" class="btn btn-primary btn-lg" value="Login" />
+  </form>
+  </div>
+</div> <!-- row -->
+<hr/>
+{% endif %}
+
+<div class="row">
+  <div class="col-md-6">
+  <h3>Using multimail is as easy as this:</h3>
+  <ul>
+    <li>Put 'multimail' in your INSTALLED_APPS</li>
+    <li>Include 'django.template.loaders.eggs.Loader' in your TEMPLATE_LOADERS</li>
+    <li>Include a line like this in your base urls.py:
+      <div class="code">(r'^mail/', include('multimail.urls')),</div>
+    </li>
+    <li>syncdb</li>
+  </ul>
+  </div>
+
+  <div class="col-md-6">
+  <h3>You will also want to be sure to:</h3>
+  <ul>
+    <li>have email sending configured (see: <a href="https://docs.djangoproject.com/en/1.7/topics/email/" target="_blank">Sending e-mail in Django</a>)</li>
+    <li>have Sites configured (see: <a href="https://docs.djangoproject.com/en/1.7/ref/contrib/sites/" target="_blank">The "sites" framework in Django</a>)</li>
+    <li>optionally expose messages in your templates (see: <a href="https://docs.djangoproject.com/en/1.7/ref/contrib/messages/" target="_blank">The messages framework in Django</a>)</li>
+  </ul>
+  </div>
+</div>
+
+<hr/>
+
+<div class="row">
+  <div class="col-md-6">
+    <h3>Download / Fork </h3>
+    <p>Multimail is available at github:</p>
+    <a href="https://github.com/scott2b/django-multimail">https://github.com/scott2b/django-multimail</a>
+  </div>
+
+  <div class="col-md-6">
+    <h3>Multimail is designed for Django versions 1.4+</h3>
+  </div>
+</div>
+
+{% comment %}
+{% if not user.is_authenticated %}
+<div class="row">
+  <div class="col-md-4">
+  <h3>Create a new user to see multimail in action.</h3>
+  <form action="." method="POST" name="new-user-form">
+    {% csrf_token %}
+    <input type="hidden" name="form-name" value="new-user-form"/>
+    {{ new_user_form.as_table }}
+    <input type="submit" method="submit" value="Create User">
+  </form>
+  </div>
+
+  <div class="col-md-4">
+  <h3>Or login with an existing account</h3>
+  <form action="." method="POST" name="auth-form">
+    {% csrf_token %}
+    <input type="hidden" name="form-name" value="auth-form"/>
+    {{ auth_form.as_table }}
+    <input type="submit" method="submit" value="Login">
+  </form>
+  </div>
+</div>
+{% endif %}
+
+  <h3>Using multimail is as easy as this:</h3>
+  <ul>
+    <li>Put 'multimail' in your INSTALLED_APPS</li>
+    <li>Include 'django.template.loaders.eggs.Loader' in your TEMPLATE_LOADERS</li>
+    <li>Include a line like this in your base urls.py:
+      <div class="code">(r'^mail/', include('multimail.urls')),</div>
+    </li>
+    <li>syncdb</li>
+  </ul>
+
+  <p>You will also want to be sure to:</p>
+  <ul>
+    <li>have email sending configured (see: <a href="https://docs.djangoproject.com/en/1.6/topics/email/">Sending e-mail in Django</a>)</li>
+    <li>have Sites configured (see: <a href="https://docs.djangoproject.com/en/1.6/ref/contrib/sites/">The "sites" framework in Django</a>)</li>
+    <li>expose messages in your templates (see: <a href="https://docs.djangoproject.com/en/1.6/ref/contrib/messages/">The messages framework in Django</a>)</li>
+  </ul>
+
+  <h3>Multimail is available at github</h3>
+  <a href="https://github.com/scott2b/django-multimail">https://github.com/scott2b/django-multimail</a>
+
+  <h3>Multimail is designed for Django versions 1.3+</h3>
+
+  
+{% endcomment %}
+{% endblock %}

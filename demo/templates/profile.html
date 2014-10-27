@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="row">
+  <div class="col-md-8">
+    <h2>User Profile</h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <h3>Edit user details:</h3>
+    <p>If you save a Django user with an e-mail address, a multimail EmailAddress
+    instance will be created for the user's e-mail. That address will
+    be marked as the user's primary e-mail address.</p>
+
+    <form action="." method="POST" class="form-stacked">
+      {% with edit_user_form as form %}
+        {% include "form.html" %}
+      {% endwith %}
+      <input type="hidden" name="form-name" value="edit-user-form"/>
+      <input type="submit" method="submit" value="Save Changes" class="btn"/>
+    </form>
+  </div>
+
+  <div class="col-md-6">
+    <h3>Add a new e-mail address:</h3>
+    <p>You can also create e-mail addresses directly for a user. Whenever a new
+    EmailAddress object is created, a verification link is sent to that
+    address.</p>
+    <form action="." method="POST" class="form-stacked">
+      {% with add_email_form as form %}
+        {% include "form.html" %}
+      {% endwith %}
+      <input type="hidden" name="form-name" value="add-email-form"/>
+      <input type="submit" method="submit" value="Add Email" />
+    </form>
+    <h3>Privacy</h3>
+    <p>In order to create a verified e-mail address associated with your
+    account, you will need to enter a valid address where you can receive
+    a verification link.</p>
+
+    <p>I do not spam and I do not share these addresses with
+    anyone. You will only receive verification e-mails for the sake of this
+    demo. You may delete e-mail addresses or your full account at any time.
+    As part of routine maintenance, accounts and related information are
+    occasionally deleted. Feel free to re-create your account at any time. 
+    </p>
+     
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <h3>Multimail addresses for user {{ user.username }}:</h3>
+      {% for addr in user.emailaddress_set.all %}
+        <p>{{ addr.email }} {% if addr.is_verified %}<span class="inline label label-success">verified</span>{% else %}<span class="inline label label-warning">unverified</span> {% endif %}{% if addr.is_primary %} <span class="inline label label-info">primary</span>{% endif %} <a href="/delete-email/{{ addr.pk }}" class="btn btn-danger btn-sm">delete</a> {% if not addr.is_primary %}<a href="/set-primary/{{ addr.pk }}" class="btn btn-info btn-sm">set as primary</a>{% endif %} </p>
+        {% if not addr.is_verified %}
+          <a href="/mail/send-verification-link/{{ addr.pk }}">Re-send verification link</a> for {{ addr.email }}
+        {% endif %}
+      {% empty %}
+        <p>None yet. Submit the user form above with an email address, or create a multimail address
+        directly with the form on the right.</p>
+      {% endfor %}
+  </div>
+
+  <div class="col-md-6">
+    <h3>Done with the demo?</h3>
+    <p>You may leave your account for future use, or delete it at
+    any time.</p>
+    <a href="/delete-user/{{ user.username }}" class="btn btn-danger btn-sm">Delete Account</a>
+  </div>
+</div>
+
+{% endblock %}
