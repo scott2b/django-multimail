@@ -3,5 +3,5 @@ build/
 .DS_Store
 *.egg-info
 db.sqlite3
-settings/prd.py
-settings/stg.py
+demo/core/settings/prd.py
+demo/core/settings/stg.py
