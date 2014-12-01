@@ -10,11 +10,11 @@ from django.template import RequestContext
 from django.template.loader import get_template
 from multimail.settings import MM
 from multimail.util import build_context_dict
+
 try:
-    USER_MODEL = settings.AUTH_USER_MODEL
+    USER_MODEL_STRING = settings.AUTH_USER_MODEL
 except AttributeError: # handle Django 1.4
-    from django.contrib.auth.models import User
-    USER_MODEL = User
+    USER_MODEL_STRING = 'auth.User'
 
 try:
     from django.utils import timezone
@@ -23,13 +23,14 @@ except ImportError:
     import datetime
     now = lambda: datetime.datetime.now()
 
+
 class EmailAddress(models.Model):
     """An e-mail address for a Django User. Users may have more than one
     e-mail address. The address that is on the user object itself as the
     email property is considered to be the primary address, for which there
     should also be an EmailAddress object associated with the user.
     """
-    user = models.ForeignKey(USER_MODEL)
+    user = models.ForeignKey(USER_MODEL_STRING)
     email = models.EmailField(max_length=100, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     verif_key = models.CharField(max_length=40)
@@ -183,7 +184,6 @@ user.username, user.email)
         subj = "Failed attempt to create Multimail email address."
         if MM.EMAIL_ADMINS:
             mail_admins(subj, msg)
-post_save.connect(email_address_handler, sender=USER_MODEL)
 
 
 def user_deactivation_handler(sender, **kwargs):
@@ -196,5 +196,29 @@ def user_deactivation_handler(sender, **kwargs):
             if not email.is_verified():
                 email.delete()
 
-if MM.USER_DEACTIVATION_HANDLER_ON:
-    post_save.connect(user_deactivation_handler, sender=USER_MODEL)
+
+def setup_signals(user_model):
+    post_save.connect(email_address_handler, sender=user_model)
+    if MM.USER_DEACTIVATION_HANDLER_ON:
+        post_save.connect(user_deactivation_handler, sender=user_model)
+
+try:
+    from django.apps import AppConfig
+except ImportError: # Handle Django < 1.7
+    AppConfig = object
+    try:
+        from django.contrib.auth import get_user_model
+        setup_signals(get_user_model())
+    except ImportError: # Handle Django 1.4
+        from django.contrib.auth.models import User
+        setup_signals(User)
+
+
+class MultimailConfig(AppConfig):
+    """For Django 1.7, set the ready callback for handling User object
+    signal configuration."""
+    name = 'multimail'
+
+    def ready(self):
+        from django.contrib.auth import get_user_model
+        setup_signals(get_user_model())
