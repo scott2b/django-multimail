@@ -9,6 +9,7 @@ class Settings(dict):
 
 MM = Settings(
     ALLOW_VERIFICATION_OF_INACTIVE_ACCOUNTS = False,
+    AUTOVERIFY_ACTIVE_ACCOUNTS = True,
     DELETE_PRIMARY = False,
     VERIFICATION_LINK_SENT_MESSAGE = \
         _("A verification link has been sent to %(email)s"),
