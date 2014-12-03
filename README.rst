@@ -124,6 +124,10 @@ MULTIMAIL_ALLOW_VERIFICATION_OF_INACTIVE_ACCOUNTS
     Default: False. Whether to allow users to verify emails associated
     with a deactivated account.
 
+MULTIMAIL_AUTOVERIFY_ACTIVE_ACCOUNTS
+    Default: True. Whether to verify accounts that have been set as active
+    outside of django-multimail.
+
 MULTIMAIL_DELETE_PRIMARY
     Default: False. Whether to clear the email field on the user object
     when the last EmailAddress is deleted.
