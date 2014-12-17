@@ -150,6 +150,7 @@ def email_address_handler(sender, **kwargs):
                                  # loading fixtures etc.
         return
     try:
+        addr = None
         if MM.SEND_EMAIL_ON_USER_SAVE_SIGNAL:
             if user.email:
                 addr = EmailAddress.objects.filter(user=user,
@@ -169,12 +170,18 @@ def email_address_handler(sender, **kwargs):
                    user.is_active and not addr.verified_at:
                     addr.verified_at = now()
             except EmailAddress.DoesNotExist:
-                addr = EmailAddress()
-                addr.user = user
-                addr.email = user.email
-            addr.save(verify=False)
-        addr._set_primary_flags() # do this for every save in case things
-                                  # get out of sync
+                # Add new e-mail address for this user except if the e-mail
+                # belongs to another user
+                if EmailAddress.objects.filter(email=user.email).count()==0:
+                    addr = EmailAddress()
+                    addr.user = user
+                    addr.email = user.email
+            # Save existing or new address
+            if addr:
+                addr.save(verify=False)
+        if addr:
+            addr._set_primary_flags() # do this for every save in case
+                                      # things get out of sync
     except Exception:
         msg = """An attempt to create EmailAddress object for user %s, email
 %s has failed. This may indicate that an EmailAddress object for that email
