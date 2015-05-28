@@ -73,7 +73,7 @@ def set_as_primary(request, email_pk):
         messages.error(request, 'Email %s needs to be verified first.' % email)
     if email.user != request.user:
         messages.error(request, 'Invalid request.')
-    else:
+    elif email.is_verified():
         email.set_primary()
         messages.success(
             request, '%s is now marked as your primary email address.' % email
