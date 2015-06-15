@@ -137,6 +137,9 @@ class EmailAddress(models.Model):
         """Raised when a verfication request is made for an e-mail address
         that is already verified."""
         pass
+		
+    class Meta:
+        app_label = 'multimail'
 
 ### HANDLERS ###
 
