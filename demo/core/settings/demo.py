@@ -9,7 +9,7 @@ ADMINS = (
 MANAGERS = ADMINS
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'yv9c%*%@g3q$o-0-xp12r9+ypv0cw6#w27b70exeyowf*il-+)'
+SECRET_KEY = os.environ['SECRET_KEY']
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -56,7 +56,7 @@ USE_TZ = True
 
 MEDIA_ROOT = ''
 MEDIA_URL = ''
-STATIC_ROOT = ''
+STATIC_ROOT = os.path.join(os.environ.get('TMPDIR', '/tmp'), 'multimail_static')
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
