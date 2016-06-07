@@ -1,5 +1,6 @@
 # Django settings for multimail demo project.
 import os, sys
+from os import environ as env
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 
@@ -9,12 +10,12 @@ ADMINS = (
 MANAGERS = ADMINS
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ['SECRET_KEY']
+SECRET_KEY = env.get('SECRET_KEY', 'development-mode-not-secret')
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env.get('ALLOWED_HOSTS'.split(','), [])
 
 INSTALLED_APPS = (
     'django.contrib.admin',
