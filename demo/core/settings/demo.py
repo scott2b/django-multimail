@@ -15,7 +15,7 @@ SECRET_KEY = env.get('SECRET_KEY', 'development-mode-not-secret')
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-ALLOWED_HOSTS = env.get('ALLOWED_HOSTS', '').split()
+ALLOWED_HOSTS = env.get('ALLOWED_HOSTS', 'localhost 127.0.0.1').split()
 
 INSTALLED_APPS = (
     'django.contrib.admin',
