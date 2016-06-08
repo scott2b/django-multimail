@@ -14,7 +14,7 @@ MANAGERS = ADMINS
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env.get('SECRET_KEY', 'development-mode-not-secret')
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ALLOWED_HOSTS = env.get('ALLOWED_HOSTS', 'localhost 127.0.0.1').split()
