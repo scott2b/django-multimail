@@ -2,6 +2,8 @@
 import os, sys
 from os import environ as env
 
+PROJECT_NAME = 'django-multimail'
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 
 ADMINS = (
