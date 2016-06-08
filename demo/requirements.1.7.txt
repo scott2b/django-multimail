@@ -2,3 +2,4 @@ Django==1.7.1
 django-multimail==0.1.3
 gunicorn==19.1.1
 mock==1.0.1
+PyYAML==3.11
