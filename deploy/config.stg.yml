@@ -1,5 +1,5 @@
 domains: "{{ project_name }}.beta.codeslick.com"
-static_bucket: "media.codeslick.com"
+static_bucket: "storage.codeslick.com"
 static_dest: "s3://{{ static_bucket }}/{{ project_name }}.beta"
 gunicorn_reload: True # generally True on staging only
 

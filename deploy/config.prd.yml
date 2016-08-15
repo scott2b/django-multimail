@@ -1,5 +1,5 @@
 domains: "django-multimail.prd-app2.codeslick.com django-multimail.codeslick.com django-multimail.com"
-static_bucket: "media.codeslick.com"
+static_bucket: "storage.codeslick.com"
 static_dest: "s3://{{ static_bucket }}/{{ project_name }}"
 gunicorn_reload: False
 
