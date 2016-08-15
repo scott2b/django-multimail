@@ -56,7 +56,7 @@ USE_TZ = True
 
 MEDIA_ROOT = ''
 MEDIA_URL = ''
-STATIC_ROOT = os.path.join(os.environ.get('TMPDIR', '/tmp'), 'multimail_static')
+STATIC_ROOT = os.path.join(os.environ.get('TMPDIR', '/tmp'), 'django-multimail_static')
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
