@@ -1,0 +1,11 @@
+domains: "{{ project_name }}.beta.codeslick.com"
+static_bucket: "media.codeslick.com"
+static_dest: "s3://{{ static_bucket }}/{{ project_name }}.beta"
+gunicorn_reload: True # generally True on staging only
+
+init_env_stg:
+  STATIC_URL: '//media.codeslick.com/{{ project_name }}.beta/'
+
+# Note that env vars set in the upstart config will also be set when using the
+# modified manage.py file for db migration and custom management commands
+init_env: "{{ init_env_common|combine(init_env_stg) }}"
