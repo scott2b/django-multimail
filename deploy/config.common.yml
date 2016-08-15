@@ -6,7 +6,7 @@ type: django
 django_settings_module: core.settings.demo
 
 init_env_common:
-  ALLOWED_HOSTS: "{{ domain }}"
+  ALLOWED_HOSTS: "{{ domains }}"
   DJANGO_SETTINGS_MODULE: "{{ django_settings_module }}"
   SECRET_KEY: "{{ vault_secret_key }}"
   DEFAULT_DB_ENGINE: 'django.db.backends.postgresql_psycopg2'
