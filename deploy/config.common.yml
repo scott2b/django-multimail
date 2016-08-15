@@ -17,7 +17,6 @@ init_env_common:
   DEFAULT_DB_PORT: '{{ vault_default_db_port }}'
 
 # Django specific settings
-django_settings_module: "core.settings.{{ env }}"
 static_dir: "/tmp/{{ project_name }}_static"
 static_prep: "{{ env_run_script }} manage.py collectstatic --noinput"
 
