@@ -1,0 +1,44 @@
+project_name: django-multimail
+gitdeploy_version: "1.0.4"
+port: 9004
+python: python2
+type: django
+django_settings_module: core.settings.demo
+
+init_env_common:
+  ALLOWED_HOSTS: "{{ domain }}"
+  DJANGO_SETTINGS_MODULE: "{{ django_settings_module }}"
+  SECRET_KEY: "{{ vault_secret_key }}"
+  DEFAULT_DB_ENGINE: 'django.db.backends.postgresql_psycopg2'
+  DEFAULT_DB_NAME: 'djangomultimail_{{ env }}'
+  DEFAULT_DB_USER: '{{ vault_default_db_user }}'
+  DEFAULT_DB_PASSWORD: '{{ vault_default_db_password }}'
+  DEFAULT_DB_HOST: '{{ vault_default_db_host }}'
+  DEFAULT_DB_PORT: '{{ vault_default_db_port }}'
+
+# Django specific settings
+static_dir: "/tmp/{{ project_name }}_static"
+static_prep: "{{ env_run_script }} manage.py collectstatic --noinput"
+
+project_repo: "https://github.com/scott2b/django-multimail.git"
+application_dir: "{{ deploy_dir }}/demo"
+deploy_dir: "{{ install_root }}/{{ project_name }}"
+requirements_file: "{{ deploy_dir }}/demo/requirements.1.7.txt"
+service_name: "apps/{{ project_name }}"
+virtualenv: "{{ virtualenv_root }}/{{ project_name }}"
+wsgi_application: "core.wsgi:application"
+env_setup_script: "{{ deploy_dir }}/env.sh"
+env_run_script: "{{ deploy_dir }}/env_run.sh"
+static_service: "s3"
+
+
+# Configs common to all projects
+application_user: apps
+install_root: /home/{{ application_user }}/sites
+virtualenv_root: /home/{{ application_user }}/env
+
+# environment keys must match deployment branch names. Value is the name
+# of the branch to be merged into this environment during deployment.
+supported_envs:
+  stg: master
+  prd: stg
