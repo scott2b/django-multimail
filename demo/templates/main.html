@@ -1,13 +1,24 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="jumbotron">
-  <h1>Multimail Demo</h1>
-  <p>Multimail is a Django plugin that manages the creation of multiple verified e-mail accounts for your users.</p>
-  {% if user.is_authenticated %}
-    <p>You are currently logged in as <b>{{ user.username }}</b>. Go to your <a class="btn btn-primary btn-lg" href="/profile/" %}">Profile page</a> or <a href="/logout/" class="btn btn-primary btn-lg">Logout</a></p>
-  {% endif %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="jumbotron">
+        <h1>Multimail Demo</h1>
+            <p>Multimail is a Django plugin that manages the creation of multiple verified e-mail accounts for your users.</p>
+            {% if user.is_authenticated %}
+                <p>You are currently logged in as <b>{{ user.username }}</b>. Go to your <a class="btn btn-primary btn-lg" href="/profile/" %}">Profile page</a> or <a href="/logout/" class="btn btn-primary btn-lg">Logout</a></p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-md-4 alert alert-success" role="alert">
+        <a href="https://djangogrove.com" class="alert-link">
+        <h4><span class="glyphicon glyphicon-tree-deciduous" aria-hidden="true"></span> DjangoGrove <span class="glyphicon glyphicon-tree-deciduous" aria-hidden="true"></span> <span class="glyphicon glyphicon-tree-deciduous" aria-hidden="true"></span> <span class="glyphicon glyphicon-tree-deciduous" aria-hidden="true"></span> <span class="glyphicon glyphicon-tree-deciduous" aria-hidden="true"></span></h4>
+        <p>Templates & themes and freshly squeezed Django</p>
+        </a>
+    </div>
 </div>
+
 
 {% if not user.is_authenticated %}
 <div class="row">
