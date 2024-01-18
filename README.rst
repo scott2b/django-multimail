@@ -1,7 +1,9 @@
+Django Multimail is no longer actively maintained
+
 Django Multimail Requires Django 1.4+
 =====================================
 
-The django-multimail demo site is at: http://www.django-multimail.com
+~The django-multimail demo site is at: http://www.django-multimail.com~
 
 multimail is a simple Django application that provides multiple-email address
 functionality for Django's existing User model. Features include:
